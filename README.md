@@ -7,7 +7,7 @@ After unpacking the installation package, run the setup.py script by supplying c
 
 
 ```
-pip install .
+pip setup.py install 
 ```
 
 ### Prerequisites
