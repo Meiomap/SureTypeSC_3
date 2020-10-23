@@ -16,10 +16,11 @@ Description:
         
         
         ```
-        pip install .
+        pip setup.py install 
         ```
         
         ### Prerequisites
+        * buildins
         * git-lfs https://git-lfs.github.com/
         * python 3 (tested on Python 3.8.5)
         * scikit-learn = v0.23.2 (http://scikit-learn.org/stable/)

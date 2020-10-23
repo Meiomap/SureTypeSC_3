@@ -554,17 +554,17 @@ def basic(manifest_filename, cluster_filename, samplesheet):
 
     print('Number of samples:',len(id_n))
 
-    cate = []
+    #cate = []
 
-    for i in range(len(id_n)):
-        cate.append(id_n[i]+'.GType')
-        cate.append(id_n[i]+'.Score')
-        cate.append(id_n[i]+'.X')
-        cate.append(id_n[i]+'.Y')
-        cate.append(id_n[i]+'.X Raw')
-        cate.append(id_n[i]+'.Y Raw')
-        cate.append(id_n[i]+'.Log R Ratio')
-        cate.append(id_n[i]+'.B Allele Freq')
+    #for i in range(len(id_n)):
+    #    cate.append(id_n[i]+'.GType')
+    #    cate.append(id_n[i]+'.Score')
+    #    cate.append(id_n[i]+'.X')
+    #    cate.append(id_n[i]+'.Y')
+    #    cate.append(id_n[i]+'.X Raw')
+    #    cate.append(id_n[i]+'.Y Raw')
+    #    cate.append(id_n[i]+'.Log R Ratio')
+    #    cate.append(id_n[i]+'.B Allele Freq')
     
 
 
@@ -588,6 +588,28 @@ def basic(manifest_filename, cluster_filename, samplesheet):
         #print "'The GTC files doesn't exist according to the file paths. Check your file paths in samplesheet.'"
         raise NameError("'The GTC files doesn't exist according to the file paths. Check your file paths in samplesheet.'")
 
+
+    #set flag indicating logr in the data
+    
+    try:
+        samples[0].get_logr_ratios()
+        flag_logr=True
+    except:
+        flag_logr=False
+  
+    cate = []
+
+    for i in range(len(id_n)):
+        cate.append(id_n[i]+'.GType')
+        cate.append(id_n[i]+'.Score')
+        cate.append(id_n[i]+'.X')
+        cate.append(id_n[i]+'.Y')
+        cate.append(id_n[i]+'.X Raw')
+        cate.append(id_n[i]+'.Y Raw')
+        if flag_logr:
+            cate.append(id_n[i]+'.Log R Ratio')
+            cate.append(id_n[i]+'.B Allele Freq')
+
     print("Generating") 
 
 
@@ -610,8 +632,11 @@ def basic(manifest_filename, cluster_filename, samplesheet):
     for j in range(len(samples)):
         print(code[j])
         sam = samples[j]
-
-        i = 8*j
+        
+        if flag_logr:
+            i = 8*j
+        else:
+            i = 6*j
         gene = sam.get_genotypes()
         gene = list(map(map_genotype,gene))
 
@@ -636,8 +661,9 @@ def basic(manifest_filename, cluster_filename, samplesheet):
         y_raw = sam.get_raw_y_intensities()
         df[cate[i+5]] = y_raw
 
-        df[cate[i+6]]=sam.get_logr_ratios()
-        df[cate[i+7]]=sam.get_ballele_freqs()  
+        if flag_logr:
+            df[cate[i+6]]=sam.get_logr_ratios()
+            df[cate[i+7]]=sam.get_ballele_freqs()  
 
         #test_count +=1
 

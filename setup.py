@@ -22,7 +22,7 @@ VERSION = '0.2.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-     'pandas','sklearn', 'scikit-learn', 'numpy','IlluminaBeadArrayFiles'
+     'pandas','sklearn', 'scikit-learn', 'numpy','IlluminaBeadArrayFiles', 'python-docx','tabulate','json_tricks'
 ]
 
 # What packages are optional?
