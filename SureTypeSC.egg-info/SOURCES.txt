@@ -27,6 +27,9 @@ SureTypeSC.egg-info/SOURCES.txt
 SureTypeSC.egg-info/dependency_links.txt
 SureTypeSC.egg-info/requires.txt
 SureTypeSC.egg-info/top_level.txt
+dist/SureTypeSC-0.2.0-py2.7.egg
 dist/SureTypeSC-0.2.0-py3-none-any.whl
+dist/SureTypeSC-0.2.0-py3.4.egg
+dist/SureTypeSC-0.2.0-py3.6.egg
 dist/SureTypeSC-0.2.0-py3.8.egg
 dist/SureTypeSC-0.2.0.tar.gz

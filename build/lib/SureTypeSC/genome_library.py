@@ -100,6 +100,16 @@ def allele_freq(df,th=0):
 
     return counting
 
+
+
+def get_multiind_frame(df):
+   df = df.set_index(['Name','Chr','Position','individual'])
+   df.index = df.index.set_levels([df.index.levels[0],df.index.levels[1].astype(str),df.index.levels[2].astype(int),df.index.levels[3].astype(str)])
+   #f=df.sort_index(axis=0)
+   ret=df.unstack(level=-1).swaplevel(0,1,axis=1)
+   ret.columns.set_names(['individual', 'feature'], inplace=True)
+   return ret
+
 def callrate_chr(df,chr_name,th=0):
     '''
     To calculate the call rate over all the chromosomes over all the samples
@@ -233,6 +243,10 @@ def locus_ma(df,locus):
     
     
     return pd.DataFrame(nc_in,index=nam[nc],columns=['NC_A','NC_M']),pd.DataFrame(ab_in,index=nam[ab],columns=['AB_A','AB_M']),pd.DataFrame(aa_in,index=nam[aa],columns=['AA_A','AA_M']),pd.DataFrame(bb_in,index=nam[bb],columns=['BB_A','BB_M'])
+
+
+def get_df_with_multi_index(df):
+    pass 
 
 
 def pca_samples(df,th=0,n=2):

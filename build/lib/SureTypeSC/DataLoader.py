@@ -250,6 +250,11 @@ class Data(object):
             return "NC"
         else: return a.gtype
 
+
+    def get_df_with_simple_index(self):
+        return self._data.stack(level='individual',dropna=False).reset_index(col_level=1)
+
+
     #@Timer.timed
     def apply_NC_threshold(self):
         #self._data=self._data.groupby(level=['individual'],axis=1).apply(self._test_func
