@@ -920,13 +920,15 @@ def starting_procedure_load_sc():
 '''
 this should be generic method that returns the single cell Data object and gDNA Data object
 '''
-def starting_procedure():
-    gdna=Data.create_from_file(Config.D["GDNA"],"GDNA",exclude=Settings.Settings.TO_REMOVE)
+def starting_procedure(decimal='.'):
+    #gdna=Data.create_from_file(Config.D["GDNA"],"GDNA",exclude=Settings.Settings.TO_REMOVE)
+    gdna = Data.create_from_frame(pd.read_csv(Config.D["GDNA"],sep='\t',decimal=decimal),type='GDNA')
     logging.info("Loaded " + Config.D["GDNA"])
     gdna.apply_NC_threshold_3(0.15,inplace=True)
     logging.info("Applied  threshold to gDNA")
 
-    sc=Data.create_from_file(Config.D["SC"],"SC")
+    #sc=Data.create_from_file(Config.D["SC"],"SC")
+    sc = Data.create_from_frame(pd.read_csv(Config.D["SC"],sep='\t',decimal=decimal), type="SC")
     logging.info("Loaded " + Config.D["SC"])
 
     for d in [gdna,sc]: d.restrict_chromosomes(Config.D["CHROMOSOMES"])
@@ -964,7 +966,7 @@ def starting_procedure():
 
     '''
     if Config.D["SCORE_THRESHOLD"]>=Config.D["TRAINING_SCORE_THRESHOLD"]:#training score is less restrictive, so it will keep more values
-        sc_train=sc.apply_NC_threshold_3(Config.D["TRAINING_SCORE_THRESHOLD"],inplace=False)
+      f  sc_train=sc.apply_NC_threshold_3(Config.D["TRAINING_SCORE_THRESHOLD"],inplace=False)
         sc.apply_NC_threshold_3(Config.D["SCORE_THRESHOLD"],inplace=True)
         second=Config.D["SCORE_THRESHOLD"]
     else:
