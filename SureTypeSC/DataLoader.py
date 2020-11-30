@@ -86,6 +86,7 @@ class Data(object):
         df = dfa
 
         print(df.shape)
+        df['Chr']=df['Chr'].astype(str)
 
         df = df.set_index(['Name','Chr','Position'])
         #df = df[:,3:]
