@@ -28,6 +28,7 @@ from . import Transformations
 import random
 from sklearn.model_selection import StratifiedKFold
 import datetime
+import random
 
 from .genome_library import basic 
 
@@ -140,6 +141,12 @@ class Data(object):
     def loop_samples(self):
         for g,d in self._data.groupby(level="individual",axis=1):
             yield (g,Data(d,type=self._type,transl=self.transl,container=self.container))
+
+
+    def random_n_cells(self,n):
+        samplelist=random.sample(self.get_individuals_names(), n)
+        self._data.sort_index(axis=1, inplace=True)
+        return Data(self._data.loc[:,(samplelist,slice(None))], type=self._type, transl=self.transl, container=self.container)
 
 
     #output only features that were added during analysis-  this makes it possible to import back to GenomeStudio, headers are loaded back to its original naming
@@ -272,6 +279,7 @@ class Data(object):
     #@Timer.timed
     def apply_NC_threshold_3(self,sthreshold,inplace=True):
         self._data.sort_index(axis=1,inplace=True)
+        self._data.loc[:,(slice(None),"score")]=self._data.loc[:, (slice(None), "score")].astype(float)
         #self._data.loc[:,(slice(None),"gtype")]= self._data.loc[:,(slice(None),"gtype")].mask((self._data.loc[:,(slice(None),"score")]<Config.D["SCORE_THRESHOLD"]).values,other="NC")
         if inplace:
           self._data.loc[:,(slice(None),"gtype")]= self._data.loc[:,(slice(None),"gtype")].mask((self._data.loc[:,(slice(None),"score")]<sthreshold).values,other="NC")
@@ -893,6 +901,99 @@ class Data(object):
     '''
 
     '''
+
+    def compare_against_reference_lightweight(self,ref,func=Transformations.Equal_with_Nan,colname="output",inplace=True):
+        '''
+        Enrich internal dataframe by output feature
+        :return:
+        '''
+
+        ref_gt=ref.consensus_genotype()
+        q_gt=self._data.loc[:,(slice(None),['gtype'])]
+
+        #this ensures that we invalidate SC calls that don't have support in gDNA - a.k.a. gDNA is NC
+        #self._data.sort_index(axis=1).loc[:,(slice(None),['gtype'])].mask(ref_gt=='NC',other="NC",inplace=True)
+
+        self._data=self._data.sort_index(axis=1)
+
+        ###!!!THIS IS EXTREMELY IMPORTANT
+        #COMMENTING THIS LINE WILL CAUSE THAT THE SC SNPS THAT ARE NOT CALLED IN GDNA ARE AUTOMATICALLY INVALIDATED -
+        self._data.loc[ref_gt=="NC",(slice(None),['gtype'])]="NC"
+        #self._data.sort_index(axis=1).loc[:,(slice(None),['gtype'])].mask(ref_gt=='NC',other="NC",inplace=True)
+        #we comment this as we want to have complete statistics
+        #self._data.sort_index(axis=1).loc[:,(slice(None),['gtype'])].mask(ref_gt=='NC',other="NC",inplace=True)
+
+        #############################################################################################
+
+
+
+
+        #Counter([(i[0],j)  for i in zip(ref_gt.values,q_gt.values) for j in i[1]])
+        #print "compare_against_reference:"
+        #print ref_gt.shape,q_gt.shape
+
+
+        #show all transitions for gDNA==AA
+        #transition_matrix.loc[(slice("AA"),slice(None))]
+        #show all transitions for SC==AA
+        #transition_matrix.loc[(slice(None),slice("AA"))]
+
+
+        #transition_matrix.loc[(slice(None),slice("AA"))]/self.get_call_rates_per_sample()["AA"]
+
+        #normalize transition matrix for SC
+        #sc_transition_matrix=transition_matrix.loc[(slice(None),slice("AA")),:].apply(lambda x: x/self.get_call_rates_per_sample()["AA"].values,axis=1)
+
+        #gdna_transition_matrix=transition_matrix.loc[(slice("AA"),slice(None)),:]/ref.get_call_rates_consensus()["AA"]
+
+
+        #print "---------------"
+        #print sc_transition_matrix
+        #print gdna_transition_matrix
+        #print "---------------"
+
+
+        #vars=[ADI_B, ADI_A,  ADO_B,  ADO_A,  ADI_BB  ,ADI_AA,  LOSS_AA,  LOSS_BB,  LOSS_AB]
+
+        #ids=["ADI_B","ADI_A","ADO_B","ADO_A","ADI_BB","ADI_AA","LOSS_AA","LOSS_BB","LOSS_AB"]
+
+        #g=.value_counts().sort_index().unstack(level=1)[normarray]
+
+
+
+
+        self.container+=+ ["output"]
+
+
+        #to_add=pd.DataFrame(vars)
+
+
+        eq_relation=self._data.sort_index(level=['individual','feature'],axis=1).loc[:,(slice(None),['gtype'])].eq(ref.consensus_genotype(), axis=0)
+        eq_relation.columns = pd.MultiIndex.from_tuples([(n,"output") for (n,t) in eq_relation.columns.values],names=self.df.columns.names)
+        #ados.columns= pd.MultiIndex.from_tuples([(n,"ado") for (n,t) in ados.columns.values],names=self.df.columns.names)
+        #adis.columns= pd.MultiIndex.from_tuples([(n,"adi") for (n,t) in adis.columns.values],names=self.df.columns.names)
+        #adis_aa.columns= pd.MultiIndex.from_tuples([(n,"adi_aa") for (n,t) in adis.columns.values],names=self.df.columns.names)
+        #adis_bb.columns= pd.MultiIndex.from_tuples([(n,"adi_bb") for (n,t) in adis.columns.values],names=self.df.columns.names)
+
+        update=False
+        if 'output' in self.df.columns.get_level_values(1).values:
+           update=True
+
+        if update:
+           ret_df=pd.concat([eq_relation]+vars,axis=1).sort_index(axis=1)
+           if inplace:
+             #print "Update!"
+             self.df.update(ret_df)
+           else:
+             ret_df=pd.concat([eq_relation,self.df.drop(ret_df.columns)]+vars,axis=1).sort_index(axis=1)
+        else:
+           ret_df=pd.concat([eq_relation,self.df]+vars,axis=1).sort_index(axis=1)
+           if inplace:
+             self.df=ret_df
+
+        return ret_df
+
+
     def __add__(self,other):
         a=other.df
         return 1
