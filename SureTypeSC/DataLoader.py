@@ -962,7 +962,7 @@ class Data(object):
 
 
 
-        self.container+=+ ["output"]
+        self.container+= ["output"]
 
 
         #to_add=pd.DataFrame(vars)
@@ -980,14 +980,14 @@ class Data(object):
            update=True
 
         if update:
-           ret_df=pd.concat([eq_relation]+vars,axis=1).sort_index(axis=1)
+           ret_df=pd.concat([eq_relation],axis=1).sort_index(axis=1)
            if inplace:
              #print "Update!"
              self.df.update(ret_df)
            else:
-             ret_df=pd.concat([eq_relation,self.df.drop(ret_df.columns)]+vars,axis=1).sort_index(axis=1)
+             ret_df=pd.concat([eq_relation,self.df.drop(ret_df.columns)],axis=1).sort_index(axis=1)
         else:
-           ret_df=pd.concat([eq_relation,self.df]+vars,axis=1).sort_index(axis=1)
+           ret_df=pd.concat([eq_relation,self.df],axis=1).sort_index(axis=1)
            if inplace:
              self.df=ret_df
 
