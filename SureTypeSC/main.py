@@ -21,8 +21,6 @@ import SureTypeSC.Config as Config
 
 
 import pickle
-#from .Config import *
-
 
 
 #config file
