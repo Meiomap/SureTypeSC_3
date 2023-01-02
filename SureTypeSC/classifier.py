@@ -8,6 +8,14 @@ from . import MachineLearning
 
 
 def loader(filename):
-	with open (filename,'rb') as input_file:
+	"""load serialized classifier
+
+	Args:
+		filename (pickle): path to serialized classifier
+
+	Returns:
+		SerializedTrainer: instance of classifier
+	"""
+	with open(filename,'rb') as input_file:
 		classif = SerializedTrainer(pickle.load(input_file,encoding='latin1'))
 	return classif
