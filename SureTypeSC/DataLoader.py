@@ -1,11 +1,16 @@
-'''DataLoader.py
-Author: Ivan Vogel
-Purpose: to encapsulate all Single Cell, Trios and Embryos Loading
-'''
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+""" Module for loading SNP array data 
 
-'''
-Libraries to import
-'''
+Encapsulates loading of embryo, trio or generally single cell data
+
+__author__ = ['Ivan Vogel']
+__copyright__ = Copyright 2018-2019
+__version__ = 1.0
+__maintainer__ = ['Ivan Vogel']
+__email__ = ['ivogel@sund.ku.dk']
+__status__ = Dev
+"""
 
 from . import Config
 import sys
@@ -30,14 +35,12 @@ from sklearn.model_selection import StratifiedKFold
 import datetime
 import random
 
-from .genome_library import basic 
+from genome_library import basic 
 
 import warnings
 warnings.filterwarnings("ignore")
 
 
-
-###LOAD DATA###
 class Data(object):
     def __init__(self,df,type="SC",transl=None,container=None):
        self._data=df

@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+""" Configuration file for SureTypeSC
+
+Default parameters are loaded into a dictionary unless an external file is provided in json format
+
+__author__ = ['Ivan Vogel']
+__copyright__ = Copyright 2018-2019
+__version__ = 1.0
+__maintainer__ = ['Ivan Vogel']
+__email__ = [email]
+__status__ = Dev
+"""
+
 from json_tricks import dumps
 from json_tricks import loads
 

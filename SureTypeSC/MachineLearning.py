@@ -1,3 +1,19 @@
+# -*- coding: utf-8 -*-
+"""Machine learning module for SureTypeSC
+
+This module encapsulates classes necessary for the training of the ML model for evaluating SC genotypes
+It implements a simple system for loading and experimenting with various classifiers from the scikit library
+
+
+__author__ = ["Ivan Vogel"]
+__copyright__ = "Copyright 2018"
+__version__ = 1.0
+__maintainer__ = "Ivan Vogel"
+__email__ = "ivogel@sund.ku.dk"
+__status__ = Dev
+"""
+
+
 import logging
 from .DataLoader import Data, Patterns
 
@@ -6,14 +22,11 @@ import sys
 from sklearn import mixture
 import numpy as np
 from collections import Counter
-import pickle
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 from sklearn.covariance import MinCovDet
 from . import Config
-#import pickle
 import pickle
-#import TrioLoader
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import tree

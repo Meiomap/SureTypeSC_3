@@ -1,3 +1,16 @@
+# -*- coding: utf-8 -*-
+"""Genome library
+
+Interface functions called from the R package SureTypeSCR
+
+__author__ = ["Lishan Cai","Ivan Vogel"]
+__copyright__ = Copyright 2018-2019
+__version__ = 1.0
+__maintainer__ = 'Ivan Vogel'
+__email__ = 
+__status__ = Dev
+"""
+
 import sys
 import os
 import argparse
@@ -692,12 +705,6 @@ def basic(manifest_filename, cluster_filename, samplesheet):
     #df.to_csv(output_filename, sep=delim,encoding='utf-8')
 
     return df
-
-
-
-
-
-
 
 
 def statistic(manifest_filename, cluster_filename, samplesheet):
