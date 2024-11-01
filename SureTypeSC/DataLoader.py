@@ -35,7 +35,7 @@ from sklearn.model_selection import StratifiedKFold
 import datetime
 import random
 
-from genome_library import basic 
+from .genome_library import basic 
 
 import warnings
 warnings.filterwarnings("ignore")
